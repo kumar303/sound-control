@@ -1,0 +1,22 @@
+{
+  "name": "sound-control-webextension",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "build": "rollem",
+    "flow:check": "flow check",
+    "test": "npm run flow:check",
+    "start": "web-ext run -s extension/ --firefox nightly"
+  },
+  "author": "",
+  "license": "MPL-2.0",
+  "devDependencies": {
+    "flow-bin": "^0.35.0",
+    "rollem": "^1.8.0",
+    "rollup": "^0.36.3",
+    "rollup-plugin-flow": "^1.0.1",
+    "rollup-plugin-multi-entry": "^2.0.1",
+    "web-ext": "^1.6.0"
+  }
+}

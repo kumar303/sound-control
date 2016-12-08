@@ -1,0 +1,6 @@
+# OSX
+.DS_Store
+
+# Build artifacts.
+extension/dist
+node_modules

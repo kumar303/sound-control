@@ -41,3 +41,7 @@ Nightly isn't required but `npm start` currently defaults to using it.
 
 Anytime you edit the source code it will automatically reload in Firefox
 and / or Chrome.
+
+## Icons
+
+The icon for this extension is provided by [icons8](https://icons8.com/).

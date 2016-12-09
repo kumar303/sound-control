@@ -8,8 +8,9 @@ class AudibleTab extends React.Component {
 
   onClick = (event) => {
     event.preventDefault();
-    chrome.tabs.update(this.props.tab.id, {active: true});
-    window.close();
+    chrome.tabs.update(this.props.tab.id, {active: true}, () => {
+      window.close();
+    });
   }
 
   render() {

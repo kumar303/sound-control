@@ -2,8 +2,25 @@ body {
   width: 300px;
 }
 
-button {
-  border: none;
-  border-bottom: 1px solid;
-  border-radius: 0;
+a {
+  text-decoration: none;
+}
+
+ul {
+  margin: 0;
+  padding: 0;
+}
+
+ul li {
+  border-top: 1px solid;
+  padding: 5px;
+  margin: 0;
+  list-style: none;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+  overflow: hidden;
+}
+
+ul li:first-child {
+  border-top: none;
 }

@@ -1,34 +1,52 @@
-import React from 'react';
+import React, {PropTypes} from 'react';
 import ReactDOM from 'react-dom';
 
-class Popup extends React.Component {
+class AudibleTab extends React.Component {
+  static propTypes = {
+    tab: PropTypes.object,
+  }
+
+  onClick = (event) => {
+    event.preventDefault();
+    chrome.tabs.update(this.props.tab.id, {active: true});
+    window.close();
+  }
+
   render() {
-    return <p>This is something, indeed</p>;
+    const {url} = this.props.tab;
+    return (
+      <a onClick={this.onClick}>{url}</a>
+    );
   }
 }
 
-// function refreshTabList(tabs) {
-//   var list = document.querySelector("ul#audible-tabs");
-//   document.body.removeChild(list);
-//
-//   list = document.createElement("ul");
-//   list.setAttribute("id", "audible-tabs");
-//
-//   for (var tab of tabs) {
-//     var item = document.createElement("li");
-//     item.textContent = `ex.${tab.id} - ${tab.url}`;
-//     item.onclick = function() {
-//       chrome.tabs.update(tab.id, {active: true});
-//     };
-//
-//     list.appendChild(item);
-//   }
-//
-//   document.body.appendChild(list);
-// }
-//
-// chrome.tabs.query({audible: true}, function (tabs) {
-//   refreshTabList(tabs);
-// });
+class Popup extends React.Component {
+  constructor(props) {
+    super(props);
+    this.state = {
+      audibleTabs: [],
+    };
+  }
+
+  componentDidMount() {
+    chrome.tabs.query({audible: true}, tabs => {
+      this.setState({audibleTabs: tabs});
+    });
+  }
+
+  render() {
+    let items = this.state.audibleTabs;
+    if (!items.length) {
+      items.push('There are currently no audible tabs');
+    } else {
+      items = items.map(tab => <AudibleTab tab={tab} />);
+    }
+    return (
+      <ul>
+        {items.map(item => <li>{item}</li>)}
+      </ul>
+    );
+  }
+}
 
 ReactDOM.render(<Popup/>, document.getElementById('app'));

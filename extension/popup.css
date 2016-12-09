@@ -3,7 +3,10 @@ body {
 }
 
 a {
+  display: block;
+  cursor: pointer;
   text-decoration: none;
+  width: 100%;
 }
 
 ul {

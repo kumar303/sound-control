@@ -9,6 +9,10 @@ Features:
 * Jump to any of those tabs
 * Mute any tab (coming soon)
 
+## Installation
+
+TBA
+
 ## Development
 
 Set yourself up with [NodeJS](http://nodejs.org/)

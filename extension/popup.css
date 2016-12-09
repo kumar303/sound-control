@@ -16,12 +16,12 @@ ul {
 
 ul li {
   border-top: 1px solid;
-  padding: 5px;
+  padding: 10px;
   margin: 0;
   list-style: none;
   white-space: nowrap;
-  text-overflow: ellipsis;
   overflow: hidden;
+  text-overflow: ellipsis;
 }
 
 ul li:first-child {

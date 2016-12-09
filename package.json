@@ -4,7 +4,7 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "build": "webpack --verbose --display-error-details --progress --colors",
+    "build": "webpack -w -v --display-error-details --progress --colors",
     "flow:check": "flow check",
     "test": "npm run flow:check",
     "start": "web-ext run -s extension/ --firefox nightly"

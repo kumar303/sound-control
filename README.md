@@ -2,7 +2,7 @@
 
 This is Sound Control, a
 [WebExtension](https://developer.mozilla.org/en-US/Add-ons/WebExtensions)
-that lets you work with audio tabs.
+to manage browser tabs that play audio.
 
 Features:
 * View all tabs that are currently playing sound
@@ -39,8 +39,9 @@ Nightly isn't required but `npm start` currently defaults to using it.
 * Click 'Load unpacked extension...'
 * Select the `sound-control/extension` folder
 
-Anytime you edit the source code it will automatically reload in Firefox
-and / or Chrome.
+Anytime you edit the source code it will automatically reload in Firefox.
+You may have to press command-R to reload it in Chrome depending on what you
+changed.
 
 ## Icons
 

@@ -4,7 +4,7 @@
   "version": "1.0",
 
   "browser_action": {
-    "browser_style": true,
+    "browser_style": false,
     "default_icon": {
       "48": "images/Boombox_48.png",
       "96": "images/Boombox_96.png"

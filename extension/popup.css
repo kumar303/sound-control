@@ -1,12 +1,51 @@
 body {
+  margin: 0;
+  padding: 0;
+  font-family: Arial, Helvetica, sans-serif;
   width: 400px;
 }
 
-a {
-  display: block;
+button {
+  background: none;
+}
+
+.Tab {
+  width: 100%;
+  display: flex;
+  flex-direction: row;
+  justify-content: flex-end;
+}
+
+.Tab a {
+  flex: 2 0 0;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
   cursor: pointer;
   text-decoration: none;
-  width: 100%;
+}
+
+.Tab button {
+  flex: 1 0 0;
+  margin: 0;
+  padding: 0;
+  border: 0;
+  border-radius: 0;
+  background-repeat: no-repeat;
+  background-position: right center;
+  background-size: 18px 18px;
+}
+
+.Tab button:hover {
+  background-color: none;
+}
+
+.Tab button.muted {
+  background-image: url(images/Muted-18.png);
+}
+
+.Tab button.unmuted {
+  background-image: url(images/Unmuted-18.png);
 }
 
 ul {
@@ -15,6 +54,7 @@ ul {
 }
 
 ul li {
+  font-size: 14px;
   border-top: 1px solid;
   padding: 10px;
   margin: 0;

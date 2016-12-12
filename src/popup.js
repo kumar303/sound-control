@@ -1,22 +1,45 @@
 import React, {PropTypes} from 'react';
 import ReactDOM from 'react-dom';
 
-class AudibleTab extends React.Component {
+class Tab extends React.Component {
   static propTypes = {
     tab: PropTypes.object,
   }
 
-  onClick = (event) => {
+  onClickUrl = (event) => {
     event.preventDefault();
     chrome.tabs.update(this.props.tab.id, {active: true}, () => {
       window.close();
     });
   }
 
+  onToggleMute = (event) => {
+    event.preventDefault();
+    const muted = this.props.tab.mutedInfo.muted ? false : true;
+    chrome.tabs.update(this.props.tab.id, {muted}, () => {
+      window.close();
+    });
+  }
+
   render() {
-    const {url} = this.props.tab;
+    const {url, mutedInfo} = this.props.tab;
+
+    let buttonCls;
+    let buttonTitle;
+    if (mutedInfo.muted) {
+      buttonCls = 'muted';
+      buttonTitle = 'unmute';
+    } else {
+      buttonCls = 'unmuted';
+      buttonTitle = 'mute';
+    }
+
     return (
-      <a onClick={this.onClick}>{url}</a>
+      <div className="Tab">
+        <a onClick={this.onClickUrl}>{url}</a>
+        <button onClick={this.onToggleMute} title={buttonTitle}
+          className={buttonCls}></button>
+      </div>
     );
   }
 }
@@ -40,7 +63,7 @@ class Popup extends React.Component {
     if (!items.length) {
       items.push('There are currently no tabs playing sound');
     } else {
-      items = items.map(tab => <AudibleTab tab={tab} />);
+      items = items.map(tab => <Tab tab={tab} />);
     }
     return (
       <ul>

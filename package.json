@@ -7,9 +7,10 @@
     "build": "webpack -w -v --display-error-details --progress --colors",
     "flow:check": "flow check",
     "test": "npm run flow:check",
-    "start": "web-ext run -s extension/ --firefox nightly"
+    "start": "web-ext run -s extension/ --firefox nightly",
+    "pkg": "web-ext build -s extension/"
   },
-  "author": "",
+  "author": "Kumar McMillan",
   "license": "MPL-2.0",
   "devDependencies": {
     "babel-core": "6.20.0",

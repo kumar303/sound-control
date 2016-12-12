@@ -1,46 +1,7 @@
-import React, {PropTypes} from 'react';
+import React from 'react';
 import ReactDOM from 'react-dom';
 
-class Tab extends React.Component {
-  static propTypes = {
-    tab: PropTypes.object,
-  }
-
-  onClickUrl = (event) => {
-    event.preventDefault();
-    chrome.tabs.update(this.props.tab.id, {active: true}, () => {
-      window.close();
-    });
-  }
-
-  onToggleMute = (event) => {
-    event.preventDefault();
-    const muted = this.props.tab.mutedInfo.muted ? false : true;
-    chrome.tabs.update(this.props.tab.id, {muted});
-  }
-
-  render() {
-    const {url, mutedInfo} = this.props.tab;
-
-    let buttonCls;
-    let buttonTitle;
-    if (mutedInfo.muted) {
-      buttonCls = 'muted';
-      buttonTitle = 'unmute';
-    } else {
-      buttonCls = 'unmuted';
-      buttonTitle = 'mute';
-    }
-
-    return (
-      <div className="Tab">
-        <a onClick={this.onClickUrl}>{url}</a>
-        <button onClick={this.onToggleMute} title={buttonTitle}
-          className={buttonCls}></button>
-      </div>
-    );
-  }
-}
+import Tab from './tab';
 
 class Popup extends React.Component {
   constructor(props) {

@@ -2,7 +2,7 @@ body {
   margin: 0;
   padding: 0;
   font-family: Arial, Helvetica, sans-serif;
-  width: 400px;
+  width: 600px;
 }
 
 button {
@@ -25,11 +25,20 @@ button {
   justify-content: center;
   cursor: pointer;
   text-decoration: none;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  margin-right: 5px;
+}
+
+.Tab a span {
+  font-size: 12px;
+  color: #777;
 }
 
 .Tab button {
-  width: 26px;
-  height: 26px;
+  width: 30px;
+  height: 30px;
   margin: 0;
   padding: 0;
   border: 0;
@@ -63,9 +72,6 @@ ul li {
   padding: 10px;
   margin: 0;
   list-style: none;
-  white-space: nowrap;
-  overflow: hidden;
-  text-overflow: ellipsis;
 }
 
 ul li:first-child {

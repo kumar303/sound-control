@@ -1,3 +1,5 @@
+import url from 'url';
+
 import React, {PropTypes} from 'react';
 
 export default class Tab extends React.Component {
@@ -46,11 +48,11 @@ export default class Tab extends React.Component {
   }
 
   render() {
-    const {url, mutedInfo} = this.state.tab;
+    const {tab} = this.state;
 
     let buttonCls;
     let buttonTitle;
-    if (mutedInfo.muted) {
+    if (tab.mutedInfo.muted) {
       buttonCls = 'muted';
       buttonTitle = 'unmute';
     } else {
@@ -58,9 +60,11 @@ export default class Tab extends React.Component {
       buttonTitle = 'mute';
     }
 
+    const urlHost = url.parse(tab.url).hostname;
+
     return (
       <div className="Tab">
-        <a onClick={this.onClickUrl}>{url}</a>
+        <a onClick={this.onClickUrl}>{tab.title}<span>{urlHost}</span></a>
         <button onClick={this.onToggleMute} title={buttonTitle}
           className={buttonCls}></button>
       </div>

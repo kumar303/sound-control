@@ -20,7 +20,7 @@ class Popup extends React.Component {
   render() {
     let items = this.state.audibleTabs;
     if (!items.length) {
-      items.push('There are currently no tabs playing sound');
+      items.push('There are currently no websites playing sound');
     } else {
       items = items.map(tab => <Tab tab={tab} />);
     }

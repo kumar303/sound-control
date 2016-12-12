@@ -4,10 +4,12 @@ This is Sound Control, a
 [WebExtension](https://developer.mozilla.org/en-US/Add-ons/WebExtensions)
 to manage browser tabs that play audio.
 
-Features:
-* View all tabs that are currently playing sound
+It adds a button to the browser toolbar that opens a window with a few features:
+* View all tabs that are currently audible
 * Jump to any of those tabs
-* Mute / unmute any tab
+* Mute a single tab
+* Mute all tabs (coming soon)
+* Automatically mute any audible tabs on startup (coming soon)
 
 ## Installation
 

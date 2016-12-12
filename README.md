@@ -49,4 +49,5 @@ changed.
 
 ## Icons
 
-The icon for this extension is provided by [icons8](https://icons8.com/).
+The icons for this extension are provided by [icons8](https://icons8.com/)
+and [Ionic](http://ionicons.com/).

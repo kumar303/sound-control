@@ -16,9 +16,7 @@ class Tab extends React.Component {
   onToggleMute = (event) => {
     event.preventDefault();
     const muted = this.props.tab.mutedInfo.muted ? false : true;
-    chrome.tabs.update(this.props.tab.id, {muted}, () => {
-      window.close();
-    });
+    chrome.tabs.update(this.props.tab.id, {muted});
   }
 
   render() {

@@ -26,26 +26,28 @@ button {
 }
 
 .Tab button {
-  flex: 1 0 0;
+  width: 26px;
+  height: 26px;
   margin: 0;
   padding: 0;
   border: 0;
   border-radius: 0;
   background-repeat: no-repeat;
-  background-position: right center;
-  background-size: 18px 18px;
+  background-position: center center;
+  background-size: 22px 22px;
 }
 
 .Tab button:hover {
   background-color: none;
+  border: 1px solid black;
 }
 
 .Tab button.muted {
-  background-image: url(images/Muted-18.png);
+  background-image: url(images/ios7-volume-low.png);
 }
 
 .Tab button.unmuted {
-  background-image: url(images/Unmuted-18.png);
+  background-image: url(images/ios7-volume-high.png);
 }
 
 ul {

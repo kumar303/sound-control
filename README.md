@@ -7,7 +7,7 @@ to manage browser tabs that play audio.
 Features:
 * View all tabs that are currently playing sound
 * Jump to any of those tabs
-* Mute any tab (coming soon)
+* Mute / unmute any tab
 
 ## Installation
 

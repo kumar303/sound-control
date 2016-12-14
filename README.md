@@ -11,6 +11,10 @@ It adds a button to the browser toolbar that opens a window with a few features:
 * Mute all tabs (coming soon)
 * Automatically mute any audible tabs on startup (coming soon)
 
+Here's a screenshot (which I'm sure is outdated by now):
+
+![screenshot](screenshots/screenshot-1.0.0.png "Screenshot")
+
 ## Installation
 
 TBA

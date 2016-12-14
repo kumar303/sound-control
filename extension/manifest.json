@@ -15,6 +15,16 @@
     "default_popup": "popup.html"
   },
 
+  "commands": {
+    "_execute_browser_action": {
+      "suggested_key": {
+        "default": "Ctrl+Shift+S",
+        "mac": "Command+Shift+S"
+      },
+      "description": "Open the sound control panel"
+    }
+  },
+
   "permissions": ["activeTab", "tabs"],
 
   "manifest_version": 2

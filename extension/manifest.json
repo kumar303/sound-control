@@ -1,7 +1,9 @@
 {
   "version": "1.0.0",
-  "manifest_version": 2,
   "name": "Sound Control",
+  "description": "Manage audible web pages from a central location.",
+  "homepage_url": "https://github.com/kumar303/sound-control/",
+  "author": "Kumar McMillan",
 
   "browser_action": {
     "browser_style": false,
@@ -13,5 +15,7 @@
     "default_popup": "popup.html"
   },
 
-  "permissions": ["activeTab", "tabs"]
+  "permissions": ["activeTab", "tabs"],
+
+  "manifest_version": 2
 }

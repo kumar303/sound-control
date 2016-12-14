@@ -12,26 +12,10 @@ export default class Tab extends React.Component {
     this.state = {tab: props.tab};
   }
 
-  componentDidMount() {
-    chrome.tabs.onUpdated.addListener(this.onUpdated);
-  }
-
-  componentWillUnmount() {
-    chrome.tabs.onUpdated.removeListener(this.onUpdated);
-  }
-
   componentWillReceiveProps(nextProps) {
     if (nextProps.tab && nextProps.tab !== this.props.tab) {
       this.setState({tab: nextProps.tab});
     }
-  }
-
-  onUpdated = (tabId, changeInfo, tab) => {
-    if (tabId !== this.state.tab.id) {
-      return;
-    }
-    console.log(`Tab ${tab.id} was updated`);
-    this.setState({tab});
   }
 
   onClickUrl = (event) => {

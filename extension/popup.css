@@ -11,8 +11,13 @@ button {
   outline: none;
 }
 
+.no-sounds {
+  padding: 10px;
+  text-align: center;
+}
+
 .Tab {
-  width: 100%;
+  padding: 10px;
   display: flex;
   flex-direction: row;
   justify-content: flex-end;
@@ -34,6 +39,10 @@ button {
 .Tab a span {
   font-size: 12px;
   color: #777;
+}
+
+.Tab.selected {
+  background-color: #d8efff;
 }
 
 .Tab button {
@@ -69,7 +78,6 @@ ul {
 ul li {
   font-size: 14px;
   border-top: 1px solid;
-  padding: 10px;
   margin: 0;
   list-style: none;
 }

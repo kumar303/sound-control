@@ -8,21 +8,49 @@ class Popup extends React.Component {
     super(props);
     this.state = {
       audibleTabs: [],
+      selectedTab: 0,
     };
     this.listeners = {};
   }
 
   componentDidMount() {
     this.findAudibleTabs();
+
     this.addListeners({
       onCreated: this.onTabCreated,
       onUpdated: this.onTabsUpdated,
       onRemoved: this.onTabRemoved,
     });
+
+    chrome.runtime.onMessage.addListener(this.onMessage);
   }
 
   componentWillUnmount() {
     this.removeListeners();
+    chrome.runtime.onMessage.removeListener(this.onMessage);
+  }
+
+  onMessage = (message, sender, sendResponse) => {
+    const {selectedTab, audibleTabs} = this.state;
+    let newSelectedTab;
+    if (message.keyCommand === 'moveUp') {
+      newSelectedTab = selectedTab - 1;
+    } else if (message.keyCommand === 'moveDown') {
+      newSelectedTab = selectedTab + 1;
+    }
+
+    if (newSelectedTab === undefined) {
+      return;
+    }
+
+    if (newSelectedTab >= audibleTabs.length) {
+      newSelectedTab = audibleTabs.length - 1; // last one
+    } else if (newSelectedTab < 0) {
+      newSelectedTab = 0; // first one
+    }
+    console.log(message.keyCommand, 'Changing selected tab to',
+                newSelectedTab);
+    this.setState({selectedTab: newSelectedTab});
   }
 
   visitListeners(visit) {
@@ -61,7 +89,7 @@ class Popup extends React.Component {
   }
 
   onTabsUpdated = (tabId, changeInfo, tab) => {
-    console.log(`Tab ${tab.id} was updated`);
+    console.log(`Tab ${tab.id} was updated`, changeInfo);
     this.findAudibleTabs();
   }
 
@@ -77,12 +105,25 @@ class Popup extends React.Component {
   }
 
   render() {
-    let items = this.state.audibleTabs;
+    const {audibleTabs, selectedTab} = this.state;
+    let items = audibleTabs;
     if (!items.length) {
-      items.push('There are currently no websites playing sound');
+      items.push(
+        <div className="no-sounds">
+          There are currently no websites playing sound
+        </div>
+      );
     } else {
-      items = items.map(tab => <Tab tab={tab} />);
+      const useSelectedStyle = audibleTabs.length > 1;
+      items = items.map((tab, index) => {
+        return (
+          <Tab tab={tab}
+            selected={index === selectedTab}
+            useSelectedStyle={useSelectedStyle} />
+        );
+      });
     }
+
     return (
       <ul>
         {items.map(item => <li>{item}</li>)}

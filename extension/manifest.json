@@ -15,13 +15,31 @@
     "default_popup": "popup.html"
   },
 
+  "background": {
+    "scripts": ["dist/background.js"]
+  },
+
   "commands": {
     "_execute_browser_action": {
       "suggested_key": {
-        "default": "Ctrl+Shift+S",
-        "mac": "Command+Shift+S"
+        "default": "Ctrl+Shift+O"
       },
       "description": "Open the sound control panel"
+    },
+    "moveDown": {
+      "suggested_key": {
+        "default": "Ctrl+Shift+Down"
+      }
+    },
+    "moveUp": {
+      "suggested_key": {
+        "default": "Ctrl+Shift+Up"
+      }
+    },
+    "select": {
+      "suggested_key": {
+        "default": "Ctrl+Shift+K"
+      }
     }
   },
 

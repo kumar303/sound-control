@@ -11,6 +11,13 @@ It adds a button to the browser toolbar that opens a window with a few features:
 * Mute all tabs (coming soon)
 * Automatically mute any audible tabs on startup (coming soon)
 
+Keyboard shortcuts:
+
+* `Alt+O`: Open the Sound Control window
+* `Arrow Down`: Select the next audible website in the list
+* `Arrow Up`: Select the previous website
+* `Enter`: Go to the tab for the selected website
+
 Here are some screenshots (which I'm sure are outdated by now):
 
 ![screenshot](screenshots/screenshot-1.0.0-fx.png "Screenshot")
@@ -19,7 +26,9 @@ Here are some screenshots (which I'm sure are outdated by now):
 
 ## Installation
 
-TBA
+* [Firefox](https://addons.mozilla.org/en-US/firefox/addon/sound-control/)
+* Chrome
+  * Coming soon, they're just asking for a bigger icon
 
 ## Development
 

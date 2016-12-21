@@ -9,7 +9,6 @@ class Popup extends React.Component {
     this.state = {
       audibleTabs: [],
       selectedTab: 0,
-      goToSelectedTab: false,
     };
     this.listeners = {};
   }
@@ -38,23 +37,14 @@ class Popup extends React.Component {
   }
 
   onKeyDown = (event) => {
-    //console.log(event, 'keyName', event.key);
     const {selectedTab, audibleTabs} = this.state;
-
-    if (event.key === 'Enter') {
-      this.setState({goToSelectedTab: true});
-      return;
-    }
-
     let newSelectedTab;
 
     if (event.key === 'ArrowUp') {
       newSelectedTab = selectedTab - 1;
     } else if (event.key === 'ArrowDown') {
       newSelectedTab = selectedTab + 1;
-    }
-
-    if (newSelectedTab === undefined) {
+    } else {
       return;
     }
 
@@ -119,7 +109,7 @@ class Popup extends React.Component {
   }
 
   render() {
-    const {goToSelectedTab, audibleTabs, selectedTab} = this.state;
+    const {audibleTabs, selectedTab} = this.state;
     let items = audibleTabs;
     if (!items.length) {
       items.push(
@@ -130,12 +120,10 @@ class Popup extends React.Component {
     } else {
       const useSelectedStyle = audibleTabs.length > 1;
       items = items.map((tab, index) => {
-        const isSelected = index === selectedTab;
-        const goToUrl = goToSelectedTab && isSelected;
+        const selected = index === selectedTab;
         return (
           <Tab tab={tab}
-            selected={isSelected} goToUrl={goToUrl}
-            useSelectedStyle={useSelectedStyle} />
+            selected={selected} useSelectedStyle={useSelectedStyle} />
         );
       });
     }

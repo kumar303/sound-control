@@ -7,7 +7,6 @@ export default class Tab extends React.Component {
     selected: PropTypes.bool,
     useSelectedStyle: PropTypes.bool,
     tab: PropTypes.object,
-    goToUrl: PropTypes.bool,
   }
 
   static defaultProps = {
@@ -18,15 +17,33 @@ export default class Tab extends React.Component {
   constructor(props) {
     super(props);
     this.state = {tab: props.tab};
-    if (props.goToUrl) {
-      return this.goToTabUrl();
+  }
+
+  componentDidMount() {
+    document.addEventListener('keydown', this.onKeyDown, false);
+  }
+
+  componentWillUnmount() {
+    document.removeEventListener('keydown', this.onKeyDown);
+  }
+
+  onKeyDown = (event) => {
+    if (!this.props.selected) {
+      return;
+    }
+
+    if (event.key === 'Enter') {
+      this.goToTabUrl();
+      return;
+    }
+
+    if (event.key === 'm') {
+      this.toggleMute();
+      return;
     }
   }
 
   componentWillReceiveProps(nextProps) {
-    if (nextProps.goToUrl) {
-      return this.goToTabUrl();
-    }
     if (nextProps.tab && nextProps.tab !== this.props.tab) {
       this.setState({tab: nextProps.tab});
     }
@@ -43,19 +60,14 @@ export default class Tab extends React.Component {
     this.goToTabUrl();
   }
 
-  onToggleMute = (event) => {
-    event.preventDefault();
+  toggleMute = () => {
     const muted = this.state.tab.mutedInfo.muted ? false : true;
     chrome.tabs.update(this.state.tab.id, {muted});
   }
 
-  onKeyDown = (event) => {
+  onToggleMute = (event) => {
     event.preventDefault();
-    const enterKeyCode = 13;
-    console.log('Key pressed:', event.keyCode);
-    if (event.keyCode === enterKeyCode) {
-      this.onClickUrl();
-    }
+    this.toggleMute();
   }
 
   render() {

@@ -96,8 +96,7 @@ export default class Tab extends React.Component {
 
     return (
       <div className={classNames.join(' ')}>
-        <a  ref={(ref) => { this.tabAnchor = ref; }}
-            onKeyUp={this.onKeyDown} onClick={this.onClickUrl}>
+        <a onKeyUp={this.onKeyDown} onClick={this.onClickUrl}>
           {tab.title}<span>{urlHost}</span>
         </a>
         <button onClick={this.onToggleMute} title={buttonTitle}

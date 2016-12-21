@@ -18,7 +18,7 @@
   "commands": {
     "_execute_browser_action": {
       "suggested_key": {
-        "default": "Ctrl+Shift+O"
+        "default": "Alt+O"
       },
       "description": "Open the sound control panel"
     }

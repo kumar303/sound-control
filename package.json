@@ -5,10 +5,11 @@
   "main": "index.js",
   "scripts": {
     "build": "webpack -w -v --display-error-details --progress --colors",
+    "build-once": "webpack -v --display-error-details --progress --colors",
     "flow:check": "flow check",
     "test": "npm run flow:check",
     "start": "web-ext run -s extension/ --firefox=firefoxdeveloperedition",
-    "pkg": "web-ext build -s extension/"
+    "pkg": "npm run build-once && web-ext build -s extension/"
   },
   "author": "Kumar McMillan",
   "license": "MPL-2.0",

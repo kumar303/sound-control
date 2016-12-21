@@ -50,7 +50,11 @@ export default class Tab extends React.Component {
   }
 
   goToTabUrl() {
-    chrome.tabs.update(this.state.tab.id, {active: true}, () => {
+    const {tab} = this.state;
+    chrome.tabs.update(tab.id, {active: true});
+    // If it's in another window, focus it.
+    chrome.windows.update(tab.windowId, {focused: true}, () => {
+      // Close the Sound Control popup.
       window.close();
     });
   }

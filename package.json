@@ -7,7 +7,7 @@
     "build": "webpack -w -v --display-error-details --progress --colors",
     "flow:check": "flow check",
     "test": "npm run flow:check",
-    "start": "web-ext run -s extension/ --firefox nightly",
+    "start": "web-ext run -s extension/ --firefox=firefoxdeveloperedition",
     "pkg": "web-ext build -s extension/"
   },
   "author": "Kumar McMillan",

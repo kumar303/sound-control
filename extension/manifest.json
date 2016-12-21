@@ -15,34 +15,12 @@
     "default_popup": "popup.html"
   },
 
-  "background": {
-    "scripts": ["dist/background.js"]
-  },
-
   "commands": {
     "_execute_browser_action": {
       "suggested_key": {
         "default": "Ctrl+Shift+O"
       },
       "description": "Open the sound control panel"
-    },
-    "moveDown": {
-      "suggested_key": {
-        "default": "Ctrl+Shift+Down"
-      },
-      "description": "Move down in the list of audible tabs"
-    },
-    "moveUp": {
-      "suggested_key": {
-        "default": "Ctrl+Shift+Up"
-      },
-      "description": "Move up in the list of audible tabs"
-    },
-    "select": {
-      "suggested_key": {
-        "default": "Ctrl+Shift+K"
-      },
-      "description": "Go to the selected audible tab"
     }
   },
 

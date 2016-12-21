@@ -35,13 +35,11 @@ Start the source builder in your terminal:
 ## Development in Firefox
 
 Make sure you have
-[Firefox Nightly](https://www.mozilla.org/en-US/firefox/channel/desktop/)
-installed, open a new terminal window, and type this to
-launch the extension:
+[Firefox Developer Edition](https://www.mozilla.org/en-US/firefox/channel/desktop/)
+installed.
+Type this in a shell to launch the extension:
 
     npm start
-
-Nightly isn't required but `npm start` currently defaults to using it.
 
 ## Development in Chrome
 

@@ -7,6 +7,7 @@ export default class Tab extends React.Component {
     selected: PropTypes.bool,
     useSelectedStyle: PropTypes.bool,
     tab: PropTypes.object,
+    goToUrl: PropTypes.bool,
   }
 
   static defaultProps = {
@@ -17,27 +18,17 @@ export default class Tab extends React.Component {
   constructor(props) {
     super(props);
     this.state = {tab: props.tab};
-  }
-
-  componentDidMount() {
-    chrome.runtime.onMessage.addListener(this.onMessage);
-  }
-
-  componentWillUnmount() {
-    chrome.runtime.onMessage.removeListener(this.onMessage);
-  }
-
-  componentWillReceiveProps(nextProps) {
-    if (nextProps.tab && nextProps.tab !== this.props.tab) {
-      this.setState({tab: nextProps.tab});
+    if (props.goToUrl) {
+      return this.goToTabUrl();
     }
   }
 
-  onMessage = (message, sender, sendResponse) => {
-    const {selected} = this.props;
-    if (selected && message.keyCommand === 'select') {
-      console.log('Selecting tab', this.props.tab.id);
-      this.goToTabUrl();
+  componentWillReceiveProps(nextProps) {
+    if (nextProps.goToUrl) {
+      return this.goToTabUrl();
+    }
+    if (nextProps.tab && nextProps.tab !== this.props.tab) {
+      this.setState({tab: nextProps.tab});
     }
   }
 

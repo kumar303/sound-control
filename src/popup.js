@@ -9,6 +9,7 @@ class Popup extends React.Component {
     this.state = {
       audibleTabs: [],
       selectedTab: 0,
+      goToSelectedTab: false,
     };
     this.listeners = {};
   }
@@ -22,20 +23,34 @@ class Popup extends React.Component {
       onRemoved: this.onTabRemoved,
     });
 
-    chrome.runtime.onMessage.addListener(this.onMessage);
+    setTimeout(() => {
+      console.log('focusing to get key events!');
+      // The focus is a Firefox workaround for:
+      // https://bugzilla.mozilla.org/show_bug.cgi?id=1324255
+      document.querySelector('body').focus();
+    }, 100);
+    document.addEventListener('keydown', this.onKeyDown, false);
   }
 
   componentWillUnmount() {
     this.removeListeners();
-    chrome.runtime.onMessage.removeListener(this.onMessage);
+    document.removeEventListener('keydown', this.onKeyDown);
   }
 
-  onMessage = (message, sender, sendResponse) => {
+  onKeyDown = (event) => {
+    //console.log(event, 'keyName', event.key);
     const {selectedTab, audibleTabs} = this.state;
+
+    if (event.key === 'Enter') {
+      this.setState({goToSelectedTab: true});
+      return;
+    }
+
     let newSelectedTab;
-    if (message.keyCommand === 'moveUp') {
+
+    if (event.key === 'ArrowUp') {
       newSelectedTab = selectedTab - 1;
-    } else if (message.keyCommand === 'moveDown') {
+    } else if (event.key === 'ArrowDown') {
       newSelectedTab = selectedTab + 1;
     }
 
@@ -48,8 +63,7 @@ class Popup extends React.Component {
     } else if (newSelectedTab < 0) {
       newSelectedTab = 0; // first one
     }
-    console.log(message.keyCommand, 'Changing selected tab to',
-                newSelectedTab);
+    console.log('Changing selected tab to', newSelectedTab);
     this.setState({selectedTab: newSelectedTab});
   }
 
@@ -105,7 +119,7 @@ class Popup extends React.Component {
   }
 
   render() {
-    const {audibleTabs, selectedTab} = this.state;
+    const {goToSelectedTab, audibleTabs, selectedTab} = this.state;
     let items = audibleTabs;
     if (!items.length) {
       items.push(
@@ -116,9 +130,11 @@ class Popup extends React.Component {
     } else {
       const useSelectedStyle = audibleTabs.length > 1;
       items = items.map((tab, index) => {
+        const isSelected = index === selectedTab;
+        const goToUrl = goToSelectedTab && isSelected;
         return (
           <Tab tab={tab}
-            selected={index === selectedTab}
+            selected={isSelected} goToUrl={goToUrl}
             useSelectedStyle={useSelectedStyle} />
         );
       });

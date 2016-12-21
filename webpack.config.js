@@ -3,7 +3,6 @@ const webpack = require('webpack');
 
 module.exports = {
   entry: {
-    background: './src/background',
     popup: './src/popup',
   },
   output: {

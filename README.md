@@ -17,7 +17,7 @@ Keyboard shortcuts:
 * `Arrow Down`: Select the next audible website in the list
 * `Arrow Up`: Select the previous website
 * `Enter`: Go to the tab for the selected website
-* `m`: Mute the selected website
+* `m`: Mute / Unmute the selected website
 
 Here are some screenshots (which I'm sure are outdated by now):
 

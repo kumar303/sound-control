@@ -11,6 +11,10 @@ class Popup extends React.Component {
       selectedTab: 0,
     };
 
+    window.addEventListener('unload', this.onWindowUnload);
+  }
+
+  componentDidMount() {
     chrome.runtime.onMessage.addListener((message) => {
       if (!message.popup) {
         return;
@@ -31,10 +35,6 @@ class Popup extends React.Component {
       }
     });
 
-    window.addEventListener('unload', this.onWindowUnload);
-  }
-
-  componentDidMount() {
     this.sendToBackground({action: 'openPopup'})
       .then(() => {
         console.log('popup: openPopup message received');

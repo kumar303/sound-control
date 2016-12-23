@@ -15,20 +15,20 @@ class Popup extends React.Component {
   }
 
   componentDidMount() {
-    chrome.runtime.onMessage.addListener((message) => {
+    chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
       if (!message.popup) {
         return;
       }
       console.log('Popup: got message:', message);
       switch (message.action) {
         case 'findAudibleTabs':
-          return this.findAudibleTabs(message);
+          return sendResponse(this.findAudibleTabs(message));
         case 'onTabCreated':
-          return this.onTabCreated(message);
+          return sendResponse(this.onTabCreated(message));
         case 'onTabsUpdated':
-          return this.onTabsUpdated(message);
+          return sendResponse(this.onTabsUpdated(message));
         case 'onTabRemoved':
-          return this.onTabRemoved(message);
+          return sendResponse(this.onTabRemoved(message));
         default:
           throw new Error(
             `Popup got an unexpected action: ${message.action}`);

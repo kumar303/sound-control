@@ -2,18 +2,18 @@ class Background {
   constructor() {
     this.listeners = {};
 
-    chrome.runtime.onMessage.addListener((message) => {
+    chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
       if (!message.background) {
         return;
       }
       console.log('Background: got message:', message);
       switch (message.action) {
         case 'findAudibleTabs':
-          return this.findAudibleTabs();
+          return sendResponse(this.findAudibleTabs());
         case 'openPopup':
-          return this.onPopupOpen();
+          return sendResponse(this.onPopupOpen());
         case 'closePopup':
-          return this.onPopupClose();
+          return sendResponse(this.onPopupClose());
         default:
           throw new Error(
             `Background got an unexpected action: ${message.action}`);
@@ -46,9 +46,8 @@ class Background {
       () => {
         if (chrome.runtime.lastError) {
           console.log(
-            'background: disconnecting because of:',
+            'background: got error:',
             chrome.runtime.lastError);
-          this.onPopupClose();
         }
       }
     );

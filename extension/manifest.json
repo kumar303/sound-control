@@ -24,6 +24,10 @@
     }
   },
 
+  "background": {
+    "scripts": ["dist/background.js"]
+  },
+
   "permissions": ["activeTab", "tabs"],
 
   "manifest_version": 2

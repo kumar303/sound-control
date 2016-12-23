@@ -7,20 +7,41 @@ class Popup extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
-      audibleTabs: [],
+      audibleTabs: undefined,
       selectedTab: 0,
     };
-    this.listeners = {};
+
+    chrome.runtime.onMessage.addListener((message) => {
+      if (!message.popup) {
+        return;
+      }
+      console.log('Popup: got message:', message);
+      switch (message.action) {
+        case 'findAudibleTabs':
+          return this.findAudibleTabs(message);
+        case 'onTabCreated':
+          return this.onTabCreated(message);
+        case 'onTabsUpdated':
+          return this.onTabsUpdated(message);
+        case 'onTabRemoved':
+          return this.onTabRemoved(message);
+        default:
+          throw new Error(
+            `Popup got an unexpected action: ${message.action}`);
+      }
+    });
+
+    window.addEventListener('unload', this.onWindowUnload);
   }
 
   componentDidMount() {
-    this.findAudibleTabs();
-
-    this.addListeners({
-      onCreated: this.onTabCreated,
-      onUpdated: this.onTabsUpdated,
-      onRemoved: this.onTabRemoved,
-    });
+    this.sendToBackground({action: 'openPopup'})
+      .then(() => {
+        console.log('popup: openPopup message received');
+        this.sendToBackground({
+          action: 'findAudibleTabs',
+        });
+      });
 
     setTimeout(() => {
       console.log('focusing to get key events!');
@@ -32,8 +53,41 @@ class Popup extends React.Component {
   }
 
   componentWillUnmount() {
-    this.removeListeners();
+    console.log('popup: componentWillUnmount');
+    this.sendToBackground({
+      action: 'closePopup',
+    });
+
     document.removeEventListener('keydown', this.onKeyDown);
+    window.removeEventListener('unload', this.onWindowUnload);
+  }
+
+  onWindowUnload = () => {
+    this.componentWillUnmount();
+  }
+
+  sendToBackground(message) {
+    const id = undefined;
+    const options = undefined;
+    return new Promise((resolve) => {
+      chrome.runtime.sendMessage(
+        id,
+        {
+          background: true,
+          ...message,
+        },
+        options,
+        (result) => {
+          if (chrome.runtime.lastError) {
+            console.log(
+              'popup: ignoring sendMessage error:',
+              chrome.runtime.lastError);
+          } else {
+            resolve();
+          }
+        }
+      );
+    });
   }
 
   onKeyDown = (event) => {
@@ -57,61 +111,45 @@ class Popup extends React.Component {
     this.setState({selectedTab: newSelectedTab});
   }
 
-  visitListeners(visit) {
-    Object.keys(this.listeners).forEach(eventName => {
-      const callback = this.listeners[eventName];
-      if (!callback) {
-        throw new Error(
-          `eventName "${eventName}" is not a valid listener callback; ` +
-          `value=${callback}`);
-      }
-      const event = chrome.tabs[eventName];
-      if (!event) {
-        throw new Error(
-          `chrome.tabs["${eventName}"] is not a valid event; value=${event}`);
-      }
-      visit({event, callback});
+  onTabCreated = (message) => {
+    const tab = message.data;
+    console.log(`popup: Tab ${tab.id} was created`);
+    this.sendToBackground({
+      action: 'findAudibleTabs',
     });
   }
 
-  addListeners(listeners) {
-    this.listeners = listeners;
-    this.visitListeners(({event, callback}) => {
-      event.addListener(callback);
+  onTabsUpdated = (message) => {
+    const {tab, changeInfo} = message.data;
+    console.log(`popup: Tab ${tab.id} was updated`, changeInfo);
+    this.sendToBackground({
+      action: 'findAudibleTabs',
     });
   }
 
-  removeListeners() {
-    this.visitListeners(({event, callback}) => {
-      event.removeListener(callback);
+  onTabRemoved = (message) => {
+    const tabId = message.data;
+    console.log(`popup: Tab ${tabId} was removed`);
+    this.sendToBackground({
+      action: 'findAudibleTabs',
     });
   }
 
-  onTabCreated = (tab) => {
-    console.log(`Tab ${tab.id} was created`);
-    this.findAudibleTabs();
-  }
-
-  onTabsUpdated = (tabId, changeInfo, tab) => {
-    console.log(`Tab ${tab.id} was updated`, changeInfo);
-    this.findAudibleTabs();
-  }
-
-  onTabRemoved = (tabId) => {
-    console.log(`Tab ${tabId} was removed`);
-    this.findAudibleTabs();
-  }
-
-  findAudibleTabs = () => {
-    chrome.tabs.query({audible: true}, tabs => {
-      this.setState({audibleTabs: tabs});
-    });
+  findAudibleTabs = (message) => {
+    console.log('popup: findAudibleTabs', message);
+    this.setState({audibleTabs: message.data});
   }
 
   render() {
     const {audibleTabs, selectedTab} = this.state;
     let items = audibleTabs;
-    if (!items.length) {
+    if (items === undefined) {
+      items = [
+        <div className="no-sounds">
+          Loading...
+        </div>
+      ];
+    } else if (!items.length) {
       items.push(
         <div className="no-sounds">
           There are currently no websites playing sound

@@ -74,10 +74,8 @@ export default class Tab extends React.Component {
     this.toggleMute();
   }
 
-  render() {
-    const {selected, useSelectedStyle} = this.props;
+  getMuteControl() {
     const {tab} = this.state;
-
     let buttonCls;
     let buttonTitle;
     if (tab.mutedInfo.muted) {
@@ -86,6 +84,22 @@ export default class Tab extends React.Component {
     } else {
       buttonCls = 'unmuted';
       buttonTitle = 'mute';
+    }
+    return (
+      <button onClick={this.onToggleMute} title={buttonTitle}
+        className={buttonCls}></button>
+    );
+  }
+
+  render() {
+    const {selected, useSelectedStyle} = this.props;
+    const {tab} = this.state;
+
+    let info;
+    if (tab.audible) {
+      info = this.getMuteControl();
+    } else {
+      info = <span className="no-sound">No sound</span>;
     }
 
     const urlHost = url.parse(tab.url).hostname;
@@ -99,8 +113,7 @@ export default class Tab extends React.Component {
         <a onKeyUp={this.onKeyDown} onClick={this.onClickUrl}>
           {tab.title}<span>{urlHost}</span>
         </a>
-        <button onClick={this.onToggleMute} title={buttonTitle}
-          className={buttonCls}></button>
+        {info}
       </div>
     );
   }

@@ -45,6 +45,14 @@ button {
   background-color: #d8efff;
 }
 
+.Tab > .no-sound {
+  display: flex;
+  justify-content: center;
+  flex-direction: column;
+  padding: 5px;
+  border: 1px solid black;
+}
+
 .Tab button {
   width: 30px;
   height: 30px;

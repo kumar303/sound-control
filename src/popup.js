@@ -15,16 +15,14 @@ class Popup extends React.Component {
   }
 
   componentDidMount() {
+    console.log('popup: componentDidMount()');
+
     chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
       if (!message.popup) {
         return;
       }
       console.log('Popup: got message:', message);
       switch (message.action) {
-        case 'findAudibleTabs':
-          return sendResponse(this.findAudibleTabs(message));
-        case 'onTabCreated':
-          return sendResponse(this.onTabCreated(message));
         case 'onTabsUpdated':
           return sendResponse(this.onTabsUpdated(message));
         case 'onTabRemoved':
@@ -33,14 +31,12 @@ class Popup extends React.Component {
           throw new Error(
             `Popup got an unexpected action: ${message.action}`);
       }
+      return true;
     });
 
     this.sendToBackground({action: 'openPopup'})
       .then(() => {
-        console.log('popup: openPopup message received');
-        this.sendToBackground({
-          action: 'findAudibleTabs',
-        });
+        this.findAudibleTabs();
       });
 
     setTimeout(() => {
@@ -63,6 +59,7 @@ class Popup extends React.Component {
   }
 
   onWindowUnload = () => {
+    console.log('popup: onWindowUnload');
     this.componentWillUnmount();
   }
 
@@ -83,7 +80,7 @@ class Popup extends React.Component {
               'popup: ignoring sendMessage error:',
               chrome.runtime.lastError);
           } else {
-            resolve();
+            resolve(result);
           }
         }
       );
@@ -111,33 +108,48 @@ class Popup extends React.Component {
     this.setState({selectedTab: newSelectedTab});
   }
 
-  onTabCreated = (message) => {
-    const tab = message.data;
-    console.log(`popup: Tab ${tab.id} was created`);
-    this.sendToBackground({
-      action: 'findAudibleTabs',
-    });
-  }
-
   onTabsUpdated = (message) => {
     const {tab, changeInfo} = message.data;
     console.log(`popup: Tab ${tab.id} was updated`, changeInfo);
-    this.sendToBackground({
-      action: 'findAudibleTabs',
+    if (!this.state.audibleTabs) {
+      return;
+    }
+
+    this.setState({
+      audibleTabs: this.state.audibleTabs.map(tabInState => {
+        // Splice in the updated tab.
+        if (tabInState.id === tab.id) {
+          return tab;
+        }
+        return tabInState;
+      }),
     });
   }
 
   onTabRemoved = (message) => {
     const tabId = message.data;
     console.log(`popup: Tab ${tabId} was removed`);
-    this.sendToBackground({
-      action: 'findAudibleTabs',
+    if (!this.state.audibleTabs) {
+      return;
+    }
+
+    const audibleTabs = [];
+    this.state.audibleTabs.forEach(tabInState => {
+      if (tabInState.id === tabId) {
+        return;
+      }
+      audibleTabs.push(tabInState);
     });
+    this.setState({audibleTabs});
   }
 
-  findAudibleTabs = (message) => {
-    console.log('popup: findAudibleTabs', message);
-    this.setState({audibleTabs: message.data});
+  findAudibleTabs = () => {
+    console.log('popup: findAudibleTabs');
+    this.sendToBackground({action: 'findAudibleTabs'})
+      .then(audibleTabs => {
+        console.log('popup: got response to findAudibleTabs', audibleTabs);
+        this.setState({audibleTabs});
+      });
   }
 
   render() {

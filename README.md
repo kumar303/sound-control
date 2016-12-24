@@ -13,7 +13,7 @@ It adds a button to the browser toolbar that opens a window with a few features:
 
 Keyboard shortcuts:
 
-* `Alt+O`: Open the Sound Control window
+* `Control (Command on Mac) + Shift + K`: Kick open the Sound Control panel
 * `Arrow Down`: Select the next audible website in the list
 * `Arrow Up`: Select the previous website
 * `Enter`: Go to the tab for the selected website

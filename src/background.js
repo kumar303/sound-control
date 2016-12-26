@@ -12,8 +12,8 @@ class Background {
 
       let readMessage;
       switch (message.action) {
-        case 'findAudibleTabs':
-          readMessage = this.findAudibleTabs();
+        case 'getTabs':
+          readMessage = this.getTabs();
           break;
         case 'openPopup':
           readMessage = this.onPopupOpen();
@@ -141,7 +141,7 @@ class Background {
     });
   }
 
-  findAudibleTabs = () => {
+  getTabs = () => {
     return Promise.all([
       this.queryTabs({active: true, currentWindow: true}),
       this.queryTabs({audible: true}),
@@ -178,7 +178,7 @@ class Background {
         return this.tabList;
       })
       .catch((error) => {
-        console.log('background: findAudibleTabs: error:', error);
+        console.log('background: getTabs: error:', error);
       });
   }
 

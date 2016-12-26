@@ -7,7 +7,7 @@ class Popup extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
-      audibleTabs: undefined,
+      tabs: undefined,
       selectedTab: 0,
     };
 
@@ -36,7 +36,7 @@ class Popup extends React.Component {
 
     this.sendToBackground({action: 'openPopup'})
       .then(() => {
-        this.findAudibleTabs();
+        this.getTabs();
       });
 
     setTimeout(() => {
@@ -88,7 +88,7 @@ class Popup extends React.Component {
   }
 
   onKeyDown = (event) => {
-    const {selectedTab, audibleTabs} = this.state;
+    const {selectedTab, tabs} = this.state;
     let newSelectedTab;
 
     if (event.key === 'ArrowUp') {
@@ -99,8 +99,8 @@ class Popup extends React.Component {
       return;
     }
 
-    if (newSelectedTab >= audibleTabs.length) {
-      newSelectedTab = audibleTabs.length - 1; // last one
+    if (newSelectedTab >= tabs.length) {
+      newSelectedTab = tabs.length - 1; // last one
     } else if (newSelectedTab < 0) {
       newSelectedTab = 0; // first one
     }
@@ -111,12 +111,12 @@ class Popup extends React.Component {
   onTabsUpdated = (message) => {
     const {tab, changeInfo} = message.data;
     console.log(`popup: Tab ${tab.id} was updated`, changeInfo);
-    if (!this.state.audibleTabs) {
+    if (!this.state.tabs) {
       return;
     }
 
     this.setState({
-      audibleTabs: this.state.audibleTabs.map(tabInState => {
+      tabs: this.state.tabs.map(tabInState => {
         // Splice in the updated tab.
         if (tabInState.id === tab.id) {
           return tab;
@@ -129,32 +129,32 @@ class Popup extends React.Component {
   onTabRemoved = (message) => {
     const tabId = message.data;
     console.log(`popup: Tab ${tabId} was removed`);
-    if (!this.state.audibleTabs) {
+    if (!this.state.tabs) {
       return;
     }
 
-    const audibleTabs = [];
-    this.state.audibleTabs.forEach(tabInState => {
+    const tabs = [];
+    this.state.tabs.forEach(tabInState => {
       if (tabInState.id === tabId) {
         return;
       }
-      audibleTabs.push(tabInState);
+      tabs.push(tabInState);
     });
-    this.setState({audibleTabs});
+    this.setState({tabs});
   }
 
-  findAudibleTabs = () => {
-    console.log('popup: findAudibleTabs');
-    this.sendToBackground({action: 'findAudibleTabs'})
-      .then(audibleTabs => {
-        console.log('popup: got response to findAudibleTabs', audibleTabs);
-        this.setState({audibleTabs});
+  getTabs = () => {
+    console.log('popup: getTabs');
+    this.sendToBackground({action: 'getTabs'})
+      .then(tabs => {
+        console.log('popup: got response to getTabs', tabs);
+        this.setState({tabs});
       });
   }
 
   render() {
-    const {audibleTabs, selectedTab} = this.state;
-    let items = audibleTabs;
+    const {tabs, selectedTab} = this.state;
+    let items = tabs;
     if (items === undefined) {
       items = [
         <div className="no-sounds">
@@ -168,7 +168,7 @@ class Popup extends React.Component {
         </div>
       );
     } else {
-      const useSelectedStyle = audibleTabs.length > 1;
+      const useSelectedStyle = tabs.length > 1;
       items = items.map((tab, index) => {
         const selected = index === selectedTab;
         return (

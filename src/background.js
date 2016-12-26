@@ -111,8 +111,8 @@ class Background {
       oldTab => oldTab.id === tab.id ? tab : oldTab);
 
     this.sendToPopup({
-      action: 'onTabsUpdated',
-      data: {tab, changeInfo},
+      action: 'tabListChanged',
+      data: {tabs: this.tabList},
     });
   }
 
@@ -125,8 +125,8 @@ class Background {
     this.tabList = this.tabList.filter(tab => tab.id !== tabId);
 
     this.sendToPopup({
-      action: 'onTabRemoved',
-      data: tabId,
+      action: 'tabListChanged',
+      data: {tabs: this.tabList},
     });
   }
 

@@ -23,10 +23,8 @@ class Popup extends React.Component {
       }
       console.log('Popup: got message:', message);
       switch (message.action) {
-        case 'onTabsUpdated':
-          return sendResponse(this.onTabsUpdated(message));
-        case 'onTabRemoved':
-          return sendResponse(this.onTabRemoved(message));
+        case 'tabListChanged':
+          return sendResponse(this.onTabListChanged(message));
         default:
           throw new Error(
             `Popup got an unexpected action: ${message.action}`);
@@ -108,38 +106,9 @@ class Popup extends React.Component {
     this.setState({selectedTab: newSelectedTab});
   }
 
-  onTabsUpdated = (message) => {
-    const {tab, changeInfo} = message.data;
-    console.log(`popup: Tab ${tab.id} was updated`, changeInfo);
-    if (!this.state.tabs) {
-      return;
-    }
-
-    this.setState({
-      tabs: this.state.tabs.map(tabInState => {
-        // Splice in the updated tab.
-        if (tabInState.id === tab.id) {
-          return tab;
-        }
-        return tabInState;
-      }),
-    });
-  }
-
-  onTabRemoved = (message) => {
-    const tabId = message.data;
-    console.log(`popup: Tab ${tabId} was removed`);
-    if (!this.state.tabs) {
-      return;
-    }
-
-    const tabs = [];
-    this.state.tabs.forEach(tabInState => {
-      if (tabInState.id === tabId) {
-        return;
-      }
-      tabs.push(tabInState);
-    });
+  onTabListChanged = (message) => {
+    const {tabs} = message.data;
+    console.log(`popup: onTabListChanged:`, tabs);
     this.setState({tabs});
   }
 

@@ -1,7 +1,8 @@
 class Background {
   constructor() {
     this.listeners = {};
-    this.lastTab = null
+    this.lastTab = null;
+    this.tabList = [];
 
     chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
       if (!message.background) {
@@ -106,6 +107,9 @@ class Background {
     if (this.lastTab.id === tabId) {
       this.lastTab = tab;
     }
+    this.tabList = this.tabList.map(
+      oldTab => oldTab.id === tab.id ? tab : oldTab);
+
     this.sendToPopup({
       action: 'onTabsUpdated',
       data: {tab, changeInfo},
@@ -117,6 +121,9 @@ class Background {
     if (this.lastTab.id === tabId) {
       this.lastTab = null;
     }
+
+    this.tabList = this.tabList.filter(tab => tab.id !== tabId);
+
     this.sendToPopup({
       action: 'onTabRemoved',
       data: tabId,
@@ -139,24 +146,36 @@ class Background {
       this.queryTabs({active: true, currentWindow: true}),
       this.queryTabs({audible: true}),
     ])
-      .then(([activeTabs, audibleTabsResult]) => {
-
-        let tabList;
+      .then(([activeTabs, audibleTabs]) => {
+        const newTabList = [];
         if (this.lastTab) {
           // Put the last viewed site at the top of the list so you
           // can easily jump between what you're working on and what
           // you're listening to.
-          tabList = [
-            this.lastTab,
-            ...audibleTabsResult.filter(tab => tab.id !== this.lastTab.id)
-          ];
-        } else {
-          tabList = audibleTabsResult;
+          newTabList.push(this.lastTab);
         }
 
+        function addUniqueTabs(tabList) {
+          const existingIds = new Set(newTabList.map(tab => tab.id));
+          tabList.forEach(tab => {
+            if (!existingIds.has(tab.id)) {
+              newTabList.push(tab);
+            }
+          });
+        }
+
+        addUniqueTabs(audibleTabs);
+        // Keep inaudible tabs around since the music may have just been paused
+        addUniqueTabs(this.tabList);
+
+        while (newTabList.length > 10) {
+          newTabList.pop();
+        }
+
+        this.tabList = newTabList;
         this.lastTab = activeTabs[0];
 
-        return tabList;
+        return this.tabList;
       })
       .catch((error) => {
         console.log('background: findAudibleTabs: error:', error);

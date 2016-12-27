@@ -31,8 +31,7 @@ Here are some screenshots (which I'm sure are outdated by now):
 ## Installation
 
 * [Firefox](https://addons.mozilla.org/en-US/firefox/addon/sound-control/)
-* Chrome
-  * Coming soon, they're just asking for a bigger icon
+* [Chrome](https://chrome.google.com/webstore/detail/sound-control/pdpdhkfgennhohnilnjmgiobkiedmaoo?hl=en-US&gl=US)
 
 ## Development
 

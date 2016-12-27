@@ -16,11 +16,11 @@ It adds a button to the browser toolbar that opens a window with a few features:
 Keyboard shortcuts:
 
 * `Control (Command on Mac) + Shift + K`: Kick open the Sound Control panel
-* `Arrow Down`: Select the next audible website in the list
+* `Arrow Down`: Select the next website in the list
 * `Arrow Up`: Select the previous website
-* `Enter`: Go to the tab for the selected website
+* `Enter`: Go to the tab of the selected website
 * `m`: Mute / Unmute the selected website
-* `Shift + M`: Mute / Unmute all websites
+* `M`: Mute / Unmute all websites
 
 Here are some screenshots (which I'm sure are outdated by now):
 

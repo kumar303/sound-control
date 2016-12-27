@@ -1,8 +1,12 @@
 class Background {
   constructor() {
-    this.listeners = {};
-    this.lastTab = null;
+    this.visitedTabs = [];
     this.tabList = [];
+    this.popupIsOpen = false;
+
+    chrome.tabs.onActivated.addListener(this.onActivated);
+    chrome.tabs.onUpdated.addListener(this.onTabsUpdated);
+    chrome.tabs.onRemoved.addListener(this.onTabRemoved);
 
     chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
       if (!message.background) {
@@ -13,7 +17,7 @@ class Background {
       let readMessage;
       switch (message.action) {
         case 'getTabs':
-          readMessage = this.getTabs();
+          readMessage = this.getTabsForPopup();
           break;
         case 'openPopup':
           readMessage = this.onPopupOpen();
@@ -36,15 +40,12 @@ class Background {
   }
 
   onPopupOpen() {
-    this.addListeners({
-      onUpdated: this.onTabsUpdated,
-      onRemoved: this.onTabRemoved,
-    });
+    this.popupIsOpen = true;
     return Promise.resolve();
   }
 
   onPopupClose() {
-    this.removeListeners();
+    this.popupIsOpen = false;
     return Promise.resolve();
   }
 
@@ -72,61 +73,53 @@ class Background {
     });
   }
 
-  visitListeners(visit) {
-    Object.keys(this.listeners).forEach(eventName => {
-      const callback = this.listeners[eventName];
-      if (!callback) {
-        throw new Error(
-          `eventName "${eventName}" is not a valid listener callback; ` +
-          `value=${callback}`);
-      }
-      const event = chrome.tabs[eventName];
-      if (!event) {
-        throw new Error(
-          `chrome.tabs["${eventName}"] is not a valid event; value=${event}`);
-      }
-      visit({event, callback});
-    });
-  }
-
-  addListeners(listeners) {
-    this.listeners = listeners;
-    this.visitListeners(({event, callback}) => {
-      event.addListener(callback);
-    });
-  }
-
-  removeListeners() {
-    this.visitListeners(({event, callback}) => {
-      event.removeListener(callback);
-    });
-  }
-
   onTabsUpdated = (tabId, changeInfo, tab) => {
     console.log(`background: Tab ${tab.id} was updated`, changeInfo);
-    if (this.lastTab.id === tabId) {
-      this.lastTab = tab;
-    }
+    this.visitedTabs = this.visitedTabs.map(
+      oldTab => oldTab.id === tab.id ? tab : oldTab);
     this.tabList = this.tabList.map(
       oldTab => oldTab.id === tab.id ? tab : oldTab);
 
-    this.sendToPopup({
-      action: 'tabListChanged',
-      data: {tabs: this.tabList},
-    });
+    if (this.popupIsOpen) {
+      this.sendToPopup({
+        action: 'tabListChanged',
+        data: {tabs: this.tabList},
+      });
+    }
   }
 
   onTabRemoved = (tabId) => {
     console.log(`background: Tab ${tabId} was removed`);
-    if (this.lastTab.id === tabId) {
-      this.lastTab = null;
-    }
-
+    this.visitedTabs = this.visitedTabs.filter(tab => tab.id !== tabId);
     this.tabList = this.tabList.filter(tab => tab.id !== tabId);
 
-    this.sendToPopup({
-      action: 'tabListChanged',
-      data: {tabs: this.tabList},
+    if (this.popupIsOpen) {
+      this.sendToPopup({
+        action: 'tabListChanged',
+        data: {tabs: this.tabList},
+      });
+    }
+  }
+
+  onActivated = (activeInfo) => {
+    const {tabId} = activeInfo
+    this.getTab(tabId).then(tab => {
+      this.visitedTabs.unshift(tab);
+      if (this.visitedTabs.length > 2) {
+        this.visitedTabs.pop();
+      }
+      console.log(`background: Active tab changed: ${tab.id}`);
+    });
+  }
+
+  getTab(tabId) {
+    return new Promise((resolve, reject) => {
+      chrome.tabs.get(tabId, tab => {
+        if (chrome.runtime.lastError) {
+          return reject(chrome.runtime.lastError);
+        }
+        resolve(tab);
+      });
     });
   }
 
@@ -141,18 +134,15 @@ class Background {
     });
   }
 
-  getTabs = () => {
-    return Promise.all([
-      this.queryTabs({active: true, currentWindow: true}),
-      this.queryTabs({audible: true}),
-    ])
-      .then(([activeTabs, audibleTabs]) => {
+  getTabsForPopup = () => {
+    return this.queryTabs({audible: true})
+      .then((audibleTabs) => {
         const newTabList = [];
-        if (this.lastTab) {
+        if (this.visitedTabs[1]) {
           // Put the last viewed site at the top of the list so you
           // can easily jump between what you're working on and what
           // you're listening to.
-          newTabList.push(this.lastTab);
+          newTabList.push(this.visitedTabs[1]);
         }
 
         function addUniqueTabs(tabList) {
@@ -173,12 +163,10 @@ class Background {
         }
 
         this.tabList = newTabList;
-        this.lastTab = activeTabs[0];
-
         return this.tabList;
       })
       .catch((error) => {
-        console.log('background: getTabs: error:', error);
+        console.log('background: getTabsForPopup: error:', error);
       });
   }
 

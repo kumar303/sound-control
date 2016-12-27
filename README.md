@@ -10,7 +10,7 @@ It adds a button to the browser toolbar that opens a window with a few features:
 * Mute a single tab
 * Jump back and forth between what you're working on and what you're listening
   to
-* Mute all tabs (coming soon)
+* Mute all tabs
 * Automatically mute any audible tabs on startup (coming soon)
 
 Keyboard shortcuts:
@@ -20,6 +20,7 @@ Keyboard shortcuts:
 * `Arrow Up`: Select the previous website
 * `Enter`: Go to the tab for the selected website
 * `m`: Mute / Unmute the selected website
+* `Shift + M`: Mute / Unmute all websites
 
 Here are some screenshots (which I'm sure are outdated by now):
 

@@ -78,18 +78,28 @@ button {
   background-image: url(images/ios7-volume-high.png);
 }
 
-ul {
+ul.Popup {
   margin: 0;
   padding: 0;
 }
 
-ul li {
+ul.Popup li {
   font-size: 14px;
   border-top: 1px solid;
   margin: 0;
   list-style: none;
 }
 
-ul li:first-child {
+ul.Popup li:first-child {
   border-top: none;
+}
+
+.Popup .global-control {
+  text-align: center;
+  padding: 10px;
+}
+
+.Popup .global-control button {
+  padding: 5px;
+  border: 1px solid black;
 }

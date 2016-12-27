@@ -89,6 +89,11 @@ class Popup extends React.Component {
     const {selectedTab, tabs} = this.state;
     let newSelectedTab;
 
+    if (event.shiftKey && event.key === 'M') {
+      // A capital M will toggle mute/unmute all
+      return this.toggleMuteAll();
+    }
+
     if (event.key === 'ArrowUp') {
       newSelectedTab = selectedTab - 1;
     } else if (event.key === 'ArrowDown') {
@@ -121,8 +126,40 @@ class Popup extends React.Component {
       });
   }
 
+  allTabsAreMuted() {
+    const {tabs} = this.state;
+    if (!tabs) {
+      return false;
+    }
+    return tabs.every(
+      tab => !tab.audible || (tab.mutedInfo && tab.mutedInfo.muted));
+  }
+
+  toggleMuteAll() {
+    const {tabs} = this.state;
+    // If all tabs are muted, we will unmute-all, otherwise mute-all.
+    tabs.forEach(tab => {
+      if (!tab.audible) {
+        return;
+      }
+      chrome.tabs.update(tab.id, {muted: !this.allTabsAreMuted()}, () => {
+        if (chrome.runtime.lastError) {
+          console.log(
+            `popup: onToggleMuteAll ${tab.id} error:`,
+            chrome.runtime.lastError);
+        }
+      });
+    });
+  }
+
+  onToggleMuteAll = (event) => {
+    event.preventDefault();
+    this.toggleMuteAll();
+  }
+
   render() {
     const {tabs, selectedTab} = this.state;
+    const tabsExist = Boolean(tabs && tabs.length);
     let items = tabs;
     if (items === undefined) {
       items = [
@@ -147,8 +184,18 @@ class Popup extends React.Component {
       });
     }
 
+    if (tabsExist) {
+      const muteAllPrompt =
+        this.allTabsAreMuted() ? 'Unmute all' : 'Mute all';
+      items.push(
+        <div className="global-control">
+          <button onClick={this.onToggleMuteAll}>{muteAllPrompt}</button>
+        </div>
+      );
+    }
+
     return (
-      <ul>
+      <ul className="Popup">
         {items.map(item => <li>{item}</li>)}
       </ul>
     );

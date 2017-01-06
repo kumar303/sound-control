@@ -1,20 +1,38 @@
+/* @flow */
 import url from 'url';
 
 import React, {PropTypes} from 'react';
 
+export type BrowserTab = {
+  id: number,
+  windowId: number,
+  title: string,
+  url: string,
+  audible: boolean,
+  mutedInfo?: {
+    muted: boolean,
+  },
+};
+
+type TabProps = {
+  selected: boolean,
+  useSelectedStyle: boolean,
+  tab: BrowserTab,
+};
+
 export default class Tab extends React.Component {
-  static propTypes = {
-    selected: PropTypes.bool,
-    useSelectedStyle: PropTypes.bool,
-    tab: PropTypes.object,
-  }
+  props: TabProps;
+
+  state: {
+    tab: BrowserTab,
+  };
 
   static defaultProps = {
     selected: false,
     useSelectedStyle: true,
-  }
+  };
 
-  constructor(props) {
+  constructor(props: TabProps) {
     super(props);
     this.state = {tab: props.tab};
   }
@@ -27,7 +45,7 @@ export default class Tab extends React.Component {
     document.removeEventListener('keydown', this.onKeyDown);
   }
 
-  onKeyDown = (event) => {
+  onKeyDown = (event: KeyboardEvent) => {
     if (!this.props.selected) {
       return;
     }
@@ -43,7 +61,7 @@ export default class Tab extends React.Component {
     }
   }
 
-  componentWillReceiveProps(nextProps) {
+  componentWillReceiveProps(nextProps: TabProps) {
     if (nextProps.tab && nextProps.tab !== this.props.tab) {
       this.setState({tab: nextProps.tab});
     }
@@ -59,17 +77,18 @@ export default class Tab extends React.Component {
     });
   }
 
-  onClickUrl = (event) => {
+  onClickUrl = (event: Event) => {
     event.preventDefault();
     this.goToTabUrl();
   }
 
   toggleMute = () => {
-    const muted = this.state.tab.mutedInfo.muted ? false : true;
-    chrome.tabs.update(this.state.tab.id, {muted});
+    const {tab} = this.state;
+    const muted = (tab.mutedInfo && tab.mutedInfo.muted) ? false : true;
+    chrome.tabs.update(tab.id, {muted});
   }
 
-  onToggleMute = (event) => {
+  onToggleMute = (event: Event) => {
     event.preventDefault();
     this.toggleMute();
   }
@@ -78,7 +97,7 @@ export default class Tab extends React.Component {
     const {tab} = this.state;
     let buttonCls;
     let buttonTitle;
-    if (tab.mutedInfo.muted) {
+    if (tab.mutedInfo && tab.mutedInfo.muted) {
       buttonCls = 'muted';
       buttonTitle = 'unmute';
     } else {

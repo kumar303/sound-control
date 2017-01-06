@@ -1,9 +1,17 @@
+/* @flow */
 import React from 'react';
 import ReactDOM from 'react-dom';
 
 import Tab from './tab';
+import type {BrowserTab} from './tab';
+import type {TabListMessage} from './background';
 
 class Popup extends React.Component {
+  state: {
+    tabs?: Array<BrowserTab>,
+    selectedTab: number,
+  };
+
   constructor(props) {
     super(props);
     this.state = {
@@ -29,7 +37,6 @@ class Popup extends React.Component {
           throw new Error(
             `Popup got an unexpected action: ${message.action}`);
       }
-      return true;
     });
 
     this.sendToBackground({action: 'openPopup'})
@@ -85,7 +92,7 @@ class Popup extends React.Component {
     });
   }
 
-  onKeyDown = (event) => {
+  onKeyDown = (event: KeyboardEvent) => {
     const {selectedTab, tabs} = this.state;
     let newSelectedTab;
 
@@ -102,6 +109,11 @@ class Popup extends React.Component {
       return;
     }
 
+    if (!tabs) {
+      throw new Error(
+        'cannot react to keyboard events before tabs have been set');
+    }
+
     if (newSelectedTab >= tabs.length) {
       newSelectedTab = tabs.length - 1; // last one
     } else if (newSelectedTab < 0) {
@@ -111,7 +123,7 @@ class Popup extends React.Component {
     this.setState({selectedTab: newSelectedTab});
   }
 
-  onTabListChanged = (message) => {
+  onTabListChanged = (message: TabListMessage) => {
     const {tabs} = message.data;
     console.log(`popup: onTabListChanged:`, tabs);
     this.setState({tabs});
@@ -120,7 +132,7 @@ class Popup extends React.Component {
   getTabs = () => {
     console.log('popup: getTabs');
     this.sendToBackground({action: 'getTabs'})
-      .then(tabs => {
+      .then((tabs: Array<BrowserTab>) => {
         console.log('popup: got response to getTabs', tabs);
         this.setState({tabs});
       });
@@ -137,6 +149,9 @@ class Popup extends React.Component {
 
   toggleMuteAll() {
     const {tabs} = this.state;
+    if (!tabs) {
+      throw new Error('tabs have not been set in state yet');
+    }
     // If all tabs are muted, we will unmute-all, otherwise mute-all.
     tabs.forEach(tab => {
       if (!tab.audible) {
@@ -152,46 +167,57 @@ class Popup extends React.Component {
     });
   }
 
-  onToggleMuteAll = (event) => {
+  onToggleMuteAll = (event: Event) => {
     event.preventDefault();
     this.toggleMuteAll();
   }
 
-  render() {
+  renderTabItems() {
     const {tabs, selectedTab} = this.state;
-    const tabsExist = Boolean(tabs && tabs.length);
-    let items = tabs;
-    if (items === undefined) {
-      items = [
+    if (!tabs) {
+      throw new Error('cannot render tabs before they have been set');
+    }
+
+    const useSelectedStyle = tabs.length > 1;
+
+    const items = tabs.map((tab, index) => {
+      const selected = index === selectedTab;
+      return (
+        <Tab tab={tab}
+          selected={selected} useSelectedStyle={useSelectedStyle} />
+      );
+    });
+
+    const muteAllPrompt =
+      this.allTabsAreMuted() ? 'Unmute all' : 'Mute all';
+
+    items.push(
+      <div className="global-control">
+        <button onClick={this.onToggleMuteAll}>{muteAllPrompt}</button>
+      </div>
+    );
+
+    return items;
+  }
+
+  render() {
+    const {tabs} = this.state;
+    let items = [];
+
+    if (tabs === undefined) {
+      items.push(
         <div className="no-sounds">
           Loading...
         </div>
-      ];
-    } else if (!items.length) {
+      );
+    } else if (!tabs.length) {
       items.push(
         <div className="no-sounds">
           There are currently no websites playing sound
         </div>
       );
     } else {
-      const useSelectedStyle = tabs.length > 1;
-      items = items.map((tab, index) => {
-        const selected = index === selectedTab;
-        return (
-          <Tab tab={tab}
-            selected={selected} useSelectedStyle={useSelectedStyle} />
-        );
-      });
-    }
-
-    if (tabsExist) {
-      const muteAllPrompt =
-        this.allTabsAreMuted() ? 'Unmute all' : 'Mute all';
-      items.push(
-        <div className="global-control">
-          <button onClick={this.onToggleMuteAll}>{muteAllPrompt}</button>
-        </div>
-      );
+      items = this.renderTabItems();
     }
 
     return (

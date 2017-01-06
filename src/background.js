@@ -1,4 +1,16 @@
+/* @flow */
+import type {BrowserTab} from './tab';
+
+export type TabListMessage = {
+  action: 'tabListChanged',
+  data: {tabs: Array<BrowserTab>},
+};
+
 class Background {
+  tabList: Array<BrowserTab>;
+  visitedTabs: Array<BrowserTab>;
+  popupIsOpen: boolean;
+
   constructor() {
     this.visitedTabs = [];
     this.tabList = [];
@@ -81,10 +93,11 @@ class Background {
       oldTab => oldTab.id === tab.id ? tab : oldTab);
 
     if (this.popupIsOpen) {
-      this.sendToPopup({
+      const message: TabListMessage = {
         action: 'tabListChanged',
         data: {tabs: this.tabList},
-      });
+      };
+      this.sendToPopup(message);
     }
   }
 

@@ -1,0 +1,20 @@
+[include]
+
+[libs]
+./flow/webextensions.js
+
+[options]
+module.system=node
+suppress_comment= \\(.\\|\n\\)*\\$FLOW_IGNORE
+
+[ignore]
+<PROJECT_ROOT>/extension/dist/.*
+
+# When modules use Flow you have to ignore them because we don't have
+# all of their dev dependencies.
+.*/node_modules/babel.*
+.*/node_modules/web-ext
+
+# This ignores .json files in a bunch of places. It can go away when the
+# bug is fixed: https://github.com/facebook/flow/issues/1420
+#.*/node_modules.*/\(binary\-extensions\|builtin\-modules\|iconv\-lite\|lib\|test\|url\-regex\|spdx\-exceptions\|spdx\-license\-ids\)/.*\.json$

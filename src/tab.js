@@ -3,29 +3,29 @@ import url from 'url';
 
 import React, {PropTypes} from 'react';
 
-export type BrowserTab = {
+export type BrowserTab = {|
   id: number,
   windowId: number,
   title: string,
   url: string,
   audible: boolean,
-  mutedInfo?: {
+  mutedInfo?: {|
     muted: boolean,
-  },
-};
+  |},
+|};
 
-type TabProps = {
+type TabProps = {|
   selected: boolean,
   useSelectedStyle: boolean,
   tab: BrowserTab,
-};
+|};
 
 export default class Tab extends React.Component {
   props: TabProps;
 
-  state: {
+  state: {|
     tab: BrowserTab,
-  };
+  |};
 
   static defaultProps = {
     selected: false,

@@ -7,10 +7,10 @@ import type {BrowserTab} from './tab';
 import type {TabListMessage} from './background';
 
 class Popup extends React.Component {
-  state: {
+  state: {|
     tabs?: Array<BrowserTab>,
     selectedTab: number,
-  };
+  |};
 
   constructor(props) {
     super(props);

@@ -1,10 +1,10 @@
 /* @flow */
 import type {BrowserTab} from './tab';
 
-export type TabListMessage = {
+export type TabListMessage = {|
   action: 'tabListChanged',
   data: {tabs: Array<BrowserTab>},
-};
+|};
 
 class Background {
   tabList: Array<BrowserTab>;

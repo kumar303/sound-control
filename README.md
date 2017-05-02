@@ -1,5 +1,7 @@
 # Sound Control
 
+[![Greenkeeper badge](https://badges.greenkeeper.io/kumar303/sound-control.svg)](https://greenkeeper.io/)
+
 This is Sound Control, a
 [WebExtension](https://developer.mozilla.org/en-US/Add-ons/WebExtensions)
 to manage browser tabs that play audio.

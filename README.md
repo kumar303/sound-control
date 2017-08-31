@@ -4,7 +4,6 @@ This is Sound Control, a
 [WebExtension](https://developer.mozilla.org/en-US/Add-ons/WebExtensions)
 to manage browser tabs that play audio.
 
-
 It adds a button to the browser toolbar that opens a window with a few features:
 * View all tabs that are currently audible
 * Jump to any of those tabs

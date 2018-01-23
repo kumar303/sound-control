@@ -8,7 +8,7 @@
     "build-once": "webpack -v --display-error-details --progress --colors",
     "flow:check": "flow check",
     "test": "npm run flow:check",
-    "start": "web-ext run -s extension/ --firefox=firefoxdeveloperedition",
+    "start": "web-ext run",
     "pkg": "npm run build-once && web-ext build -s extension/"
   },
   "author": "Kumar McMillan",
@@ -25,7 +25,7 @@
     "flow-bin": "0.35.0",
     "react": "15.4.1",
     "react-dom": "15.4.1",
-    "web-ext": "1.6.0",
+    "web-ext": "2.3.2",
     "webpack": "1.14.0"
   }
 }

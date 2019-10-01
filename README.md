@@ -38,11 +38,11 @@ Here are some screenshots (which I'm sure are outdated by now):
 Set yourself up with [NodeJS](http://nodejs.org/)
 and [yarn](https://yarnpkg.com/). Install all the things:
 
-    yarn install
+    yarn --ignore-engines
 
 Start the source builder in your terminal:
 
-    npm run build
+    yarn build
 
 ## Development in Firefox
 
@@ -51,7 +51,7 @@ Make sure you have
 installed.
 Type this in a shell to launch the extension:
 
-    npm start
+    yarn start
 
 ## Development in Chrome
 

@@ -1,7 +1,7 @@
 # Sound Control
 
 This is Sound Control, a
-[WebExtension](https://developer.mozilla.org/en-US/Add-ons/WebExtensions)
+[WebExtension](https://developer.mozilla.org/Add-ons/WebExtensions)
 to manage browser tabs that play audio.
 
 It adds a button to the browser toolbar that opens a window with a few features:
@@ -30,8 +30,8 @@ Here are some screenshots (which I'm sure are outdated by now):
 
 ## Installation
 
-* [Firefox](https://addons.mozilla.org/en-US/firefox/addon/sound-control/)
-* [Chrome](https://chrome.google.com/webstore/detail/sound-control/pdpdhkfgennhohnilnjmgiobkiedmaoo?hl=en-US&gl=US)
+* [Firefox](https://addons.mozilla.org/firefox/addon/sound-control/)
+* [Chrome](https://chrome.google.com/webstore/detail/sound-control/pdpdhkfgennhohnilnjmgiobkiedmaoo)
 
 ## Development
 
@@ -47,7 +47,7 @@ Start the source builder in your terminal:
 ## Development in Firefox
 
 Make sure you have
-[Firefox Developer Edition](https://www.mozilla.org/en-US/firefox/channel/desktop/)
+[Firefox Developer Edition](https://www.mozilla.org/firefox/channel/desktop/)
 installed.
 Type this in a shell to launch the extension:
 
@@ -68,4 +68,4 @@ changed.
 ## Icons
 
 The icons for this extension are provided by [icons8](https://icons8.com/)
-and [Ionic](http://ionicons.com/).
+and [Ionic](https://ionic.io/ionicons).

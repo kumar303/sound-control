@@ -9,7 +9,9 @@
     "flow:check": "flow check",
     "test": "npm run flow:check",
     "start": "web-ext run",
-    "pkg": "npm run build-once && web-ext build -s extension/"
+    "pkg": "npm run build-once && web-ext build -s extension/",
+    "web-ext:build": "web-ext build",
+    "web-ext:sign": "web-ext sign --channel=listed --api-key=$AMO_JWT_ISSUER --api-secret=$AMO_JWT_SECRET"
   },
   "author": "Kumar McMillan",
   "license": "MPL-2.0",
@@ -25,7 +27,7 @@
     "flow-bin": "0.35.0",
     "react": "15.4.1",
     "react-dom": "15.4.1",
-    "web-ext": "5.0.0",
+    "web-ext": "10.4.0",
     "webpack": "1.14.0",
     "webpack-cli": "3.3.9"
   }

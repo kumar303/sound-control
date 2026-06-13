@@ -7,3 +7,4 @@ node_modules
 web-ext-artifacts
 npm-debug.log
 package-lock.json
+pnpm-store
